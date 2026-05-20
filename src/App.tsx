@@ -797,30 +797,23 @@ function HomeView({
   return (
     <main className="home-grid">
       <Panel dataId="hero-search-panel" roleName="hero" tone="hero">
+        <div data-melius-ui-id="hero-doctor-image" data-melius-ui-role="image" className="hero-image-wrap">
+          <img src={professionalDoctor} alt="Medical professional" />
+          <div className="hero-availability-card" data-melius-ui-id="hero-availability-card">
+            <span>
+              <CalendarCheck size={17} />
+              18
+            </span>
+            <small>{c.hero.statToday}</small>
+          </div>
+        </div>
         <div className="hero-copy">
-          <Badge tone="teal">
+          <Badge tone="slate">
             <Globe2 size={14} />
             {c.hero.statSupport}
           </Badge>
           <h1 data-melius-ui-id="hero-title">{c.hero.title}</h1>
           <p data-melius-ui-id="hero-description">{c.hero.body}</p>
-          <div data-melius-ui-id="hero-search-controls" data-melius-ui-role="search" className="hero-search">
-            <TextField
-              dataId="doctor-search-input"
-              label={c.hero.search}
-              value={searchQuery}
-              placeholder={c.hero.search}
-              icon={<Search size={17} />}
-              onChange={(event) => setSearchQuery(event.currentTarget.value)}
-            />
-            <TextField
-              dataId="location-search-input"
-              label={c.hero.location}
-              defaultValue="New York, NY"
-              icon={<MapPin size={17} />}
-            />
-            <Button dataId="hero-search-button">{c.hero.cta}</Button>
-          </div>
           <div className="hero-stats" data-melius-ui-id="hero-stats">
             <span>
               <strong>120+</strong>
@@ -836,8 +829,22 @@ function HomeView({
             </span>
           </div>
         </div>
-        <div data-melius-ui-id="hero-doctor-image" data-melius-ui-role="image" className="hero-image-wrap">
-          <img src={professionalDoctor} alt="Medical professional" />
+        <div data-melius-ui-id="hero-search-controls" data-melius-ui-role="search" className="hero-search">
+          <TextField
+            dataId="doctor-search-input"
+            label={c.hero.search}
+            value={searchQuery}
+            placeholder={c.hero.search}
+            icon={<Search size={17} />}
+            onChange={(event) => setSearchQuery(event.currentTarget.value)}
+          />
+          <TextField
+            dataId="location-search-input"
+            label={c.hero.location}
+            defaultValue="New York, NY"
+            icon={<MapPin size={17} />}
+          />
+          <Button dataId="hero-search-button">{c.hero.cta}</Button>
         </div>
       </Panel>
 
@@ -845,7 +852,22 @@ function HomeView({
         <SectionTitle
           dataId="doctor-directory-header"
           title={c.doctors.title}
-          action={
+        >
+          {filteredDoctors.length} doctors
+        </SectionTitle>
+
+        <div className="directory-workspace">
+          <aside className="directory-rail" data-melius-ui-id="doctor-filter-rail">
+            <div className="directory-snapshot" data-melius-ui-id="doctor-result-snapshot">
+              <span>
+                <strong>{filteredDoctors.length}</strong>
+                doctors
+              </span>
+              <span>
+                <strong>{selectedDepartments.length || 'All'}</strong>
+                {c.doctors.active}
+              </span>
+            </div>
             <div className="filter-actions" data-melius-ui-id="department-filter-actions">
               <Button dataId="department-filter-button" variant="secondary" size="sm">
                 <Filter size={15} />
@@ -858,55 +880,56 @@ function HomeView({
                 </Button>
               ) : null}
             </div>
-          }
-        >
-          {filteredDoctors.length} doctors
-        </SectionTitle>
+            <div className="department-list" data-melius-ui-id="department-filter-list">
+              {departments.map((department) => (
+                <button
+                  key={department}
+                  type="button"
+                  data-melius-ui-id={`department-${department.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
+                  data-active={selectedDepartments.includes(department) ? 'true' : 'false'}
+                  onClick={() => toggleDepartment(department)}
+                >
+                  {department}
+                </button>
+              ))}
+            </div>
+          </aside>
 
-        <div className="department-list" data-melius-ui-id="department-filter-list">
-          {departments.map((department) => (
-            <button
-              key={department}
-              type="button"
-              data-melius-ui-id={`department-${department.toLowerCase().replace(/[^a-z0-9]+/g, '-')}`}
-              data-active={selectedDepartments.includes(department) ? 'true' : 'false'}
-              onClick={() => toggleDepartment(department)}
-            >
-              {department}
-            </button>
-          ))}
-        </div>
+          <div className="directory-results" data-melius-ui-id="doctor-results-panel">
+            <div className="directory-toolbar">
+              <div className="category-tabs" data-melius-ui-id="doctor-category-tabs" data-melius-ui-role="tabs">
+                {[
+                  ['all', c.doctors.all],
+                  ['primary', c.doctors.primary],
+                  ['specialist', c.doctors.specialist],
+                  ['dentist', c.doctors.dentist],
+                ].map(([value, label]) => (
+                  <button
+                    key={value}
+                    type="button"
+                    data-melius-ui-id={`category-tab-${value}`}
+                    data-active={selectedCategory === value ? 'true' : 'false'}
+                    onClick={() => setSelectedCategory(value as 'all' | DoctorCategory)}
+                  >
+                    {label}
+                  </button>
+                ))}
+              </div>
+            </div>
 
-        <div className="category-tabs" data-melius-ui-id="doctor-category-tabs" data-melius-ui-role="tabs">
-          {[
-            ['all', c.doctors.all],
-            ['primary', c.doctors.primary],
-            ['specialist', c.doctors.specialist],
-            ['dentist', c.doctors.dentist],
-          ].map(([value, label]) => (
-            <button
-              key={value}
-              type="button"
-              data-melius-ui-id={`category-tab-${value}`}
-              data-active={selectedCategory === value ? 'true' : 'false'}
-              onClick={() => setSelectedCategory(value as 'all' | DoctorCategory)}
-            >
-              {label}
-            </button>
-          ))}
-        </div>
-
-        {filteredDoctors.length > 0 ? (
-          <div className="doctor-grid">
-            {filteredDoctors.map((doctor) => (
-              <DoctorCard key={doctor.id} doctor={doctor} c={c} onOpen={() => openDoctor(doctor.id)} />
-            ))}
+            {filteredDoctors.length > 0 ? (
+              <div className="doctor-grid">
+                {filteredDoctors.map((doctor) => (
+                  <DoctorCard key={doctor.id} doctor={doctor} c={c} onOpen={() => openDoctor(doctor.id)} />
+                ))}
+              </div>
+            ) : (
+              <Panel dataId="doctor-empty-state" tone="soft">
+                <h3>{c.doctors.noResults}</h3>
+              </Panel>
+            )}
           </div>
-        ) : (
-          <Panel dataId="doctor-empty-state" tone="soft">
-            <h3>{c.doctors.noResults}</h3>
-          </Panel>
-        )}
+        </div>
       </section>
     </main>
   );
