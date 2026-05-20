@@ -14,12 +14,12 @@
 html {
   min-width: 320px;
   min-height: 100%;
-  background: #f8fbfc;
+  background: #f7f7f5;
   color-scheme: light;
 }
 
 html[data-theme="dark"] {
-  background: #071211;
+  background: #090909;
   color-scheme: dark;
 }
 
@@ -56,47 +56,47 @@ svg {
 }
 
 :root {
-  --app-bg: #f8fbfc;
-  --app-fg: #10201f;
+  --app-bg: #f7f7f5;
+  --app-fg: #171717;
   --surface: #ffffff;
-  --surface-soft: #eef8f7;
-  --surface-muted: #f5f7f7;
-  --muted-fg: #647a78;
-  --border: rgba(16, 32, 31, 0.1);
-  --border-strong: rgba(16, 32, 31, 0.17);
-  --primary: #0f766e;
-  --primary-strong: #0d5f59;
-  --primary-soft: rgba(15, 118, 110, 0.11);
-  --danger: #d84a4a;
-  --amber: #d39520;
-  --blue: #3178c6;
-  --green: #16a34a;
-  --shadow: 0 18px 60px rgba(23, 45, 43, 0.09), 0 1px 2px rgba(23, 45, 43, 0.05);
+  --surface-soft: #eeeeec;
+  --surface-muted: #f2f2f0;
+  --muted-fg: #666665;
+  --border: rgba(23, 23, 23, 0.1);
+  --border-strong: rgba(23, 23, 23, 0.17);
+  --primary: #171717;
+  --primary-strong: #0a0a0a;
+  --primary-soft: rgba(23, 23, 23, 0.08);
+  --danger: #9f3f3f;
+  --amber: #8a6a22;
+  --blue: #4b5563;
+  --green: #4b5563;
+  --shadow: 0 18px 60px rgba(23, 23, 23, 0.08), 0 1px 2px rgba(23, 23, 23, 0.05);
   color: var(--app-fg);
 }
 
 :root[data-theme="dark"] {
-  --app-bg: #071211;
-  --app-fg: #edf7f5;
-  --surface: #0c1a18;
-  --surface-soft: #102723;
-  --surface-muted: #0f201e;
-  --muted-fg: #98b1ad;
-  --border: rgba(237, 247, 245, 0.1);
-  --border-strong: rgba(237, 247, 245, 0.17);
-  --primary: #35c8bc;
-  --primary-strong: #56d7cc;
-  --primary-soft: rgba(53, 200, 188, 0.14);
-  --danger: #ff7b7b;
-  --amber: #f5c451;
-  --blue: #7ab7ff;
-  --green: #54d585;
+  --app-bg: #090909;
+  --app-fg: #f4f4f5;
+  --surface: #141414;
+  --surface-soft: #1d1d1d;
+  --surface-muted: #202020;
+  --muted-fg: #a1a1aa;
+  --border: rgba(244, 244, 245, 0.1);
+  --border-strong: rgba(244, 244, 245, 0.17);
+  --primary: #f4f4f5;
+  --primary-strong: #ffffff;
+  --primary-soft: rgba(244, 244, 245, 0.1);
+  --danger: #ff8585;
+  --amber: #d4b767;
+  --blue: #c7c7cc;
+  --green: #c7c7cc;
   --shadow: 0 22px 70px rgba(0, 0, 0, 0.42), 0 0 0 1px rgba(255, 255, 255, 0.02);
   color: var(--app-fg);
 }
 
 ::selection {
-  background: rgba(15, 118, 110, 0.18);
+  background: rgba(23, 23, 23, 0.18);
 }
 
 @keyframes pageIn {
@@ -114,7 +114,7 @@ svg {
 .app-shell {
   min-height: 100vh;
   background:
-    radial-gradient(circle at top left, rgba(116, 216, 206, 0.22), transparent 34rem),
+    radial-gradient(circle at top left, rgba(23, 23, 23, 0.08), transparent 34rem),
     linear-gradient(180deg, var(--app-bg), var(--app-bg));
   color: var(--app-fg);
 }
@@ -140,7 +140,7 @@ svg {
   border-radius: 12px;
   background: color-mix(in srgb, var(--surface) 88%, transparent);
   backdrop-filter: blur(18px);
-  box-shadow: 0 8px 34px rgba(14, 58, 55, 0.07);
+  box-shadow: 0 8px 34px rgba(23, 23, 23, 0.07);
 }
 
 .brand {
@@ -202,7 +202,7 @@ svg {
 .category-tabs button[data-active="true"] {
   background: var(--surface);
   color: var(--app-fg);
-  box-shadow: 0 1px 3px rgba(16, 32, 31, 0.06);
+  box-shadow: 0 1px 3px rgba(23, 23, 23, 0.06);
 }
 
 .header-actions {
@@ -250,7 +250,7 @@ svg {
 }
 
 [data-theme="dark"] .button {
-  color: #04201d;
+  color: #090909;
 }
 
 .button[data-size="sm"] {
@@ -314,13 +314,13 @@ svg {
   grid-template-columns: minmax(0, 1.42fr) minmax(280px, 0.78fr);
   min-height: 345px;
   background:
-    linear-gradient(120deg, rgba(218, 249, 246, 0.95), rgba(236, 253, 252, 0.82)),
+    linear-gradient(120deg, rgba(244, 244, 242, 0.96), rgba(232, 232, 229, 0.84)),
     var(--surface);
 }
 
 [data-theme="dark"] .panel[data-tone="hero"] {
   background:
-    linear-gradient(120deg, rgba(12, 37, 34, 0.95), rgba(13, 58, 53, 0.68)),
+    linear-gradient(120deg, rgba(21, 21, 21, 0.97), rgba(38, 38, 38, 0.72)),
     var(--surface);
 }
 
@@ -518,7 +518,7 @@ svg {
   background: var(--surface);
   color: var(--app-fg);
   text-align: left;
-  box-shadow: 0 1px 3px rgba(16, 32, 31, 0.04);
+  box-shadow: 0 1px 3px rgba(23, 23, 23, 0.04);
   transition: transform 160ms ease, box-shadow 160ms ease, border-color 160ms ease;
 }
 
@@ -877,7 +877,7 @@ svg {
 }
 
 [data-theme="dark"] .step-marker[data-active="true"] {
-  color: #04201d;
+  color: #090909;
 }
 
 .time-grid {
