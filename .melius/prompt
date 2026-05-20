@@ -1,0 +1,7 @@
+This is an official Melius UI-only template for a doctor appointment booking app.
+
+Preserve existing data-melius-ui-id and data-melius-ui-role values unless the user explicitly asks to rename visual editor metadata.
+Do not add data-melius-id, data-melius-form, data-melius-action, or data-melius-view in the template source by default.
+Do not add src/melius.app-spec.json, src/melius.client.ts, or src/melius.actions.ts to the template source.
+If the user asks for real booking, authentication, payments, appointment storage, reminders, notifications, or provider availability sync, add the required Melius App Spec and data-melius-* bindings during the generated app editing flow, not as part of the UI-only template baseline.
+Keep doctor listings, filters, booking steps, sign-in forms, appointment lists, payment forms, and confirmation states visually complete, but treat them as presentational UI until Melius bindings are added later.
