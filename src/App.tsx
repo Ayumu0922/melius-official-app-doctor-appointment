@@ -731,15 +731,24 @@ function Header({
         <span>
           <HeartPulse size={20} />
         </span>
-        <strong>{c.product}</strong>
+        <span className="brand-copy">
+          <strong>{c.product}</strong>
+          <small>{c.hero.statSupport}</small>
+        </span>
       </button>
-      <nav className="nav-tabs" aria-label="Primary">
+      <div className="header-context" data-melius-ui-id="header-context">
+        <span />
+        <strong>{currentView === 'appointments' ? c.nav.appointments : c.nav.doctors}</strong>
+        <small>120+ {c.hero.statDoctors}</small>
+      </div>
+      <nav className="nav-tabs header-nav" aria-label="Primary">
         <button
           type="button"
           data-melius-ui-id="nav-doctors"
           data-active={currentView === 'home' || currentView === 'doctor' ? 'true' : 'false'}
           onClick={() => setView('home')}
         >
+          <Search size={15} />
           {c.nav.doctors}
         </button>
         <button
@@ -748,6 +757,7 @@ function Header({
           data-active={currentView === 'appointments' ? 'true' : 'false'}
           onClick={() => setView('appointments')}
         >
+          <CalendarDays size={15} />
           {c.nav.appointments}
         </button>
       </nav>
