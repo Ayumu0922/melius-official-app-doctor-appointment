@@ -404,9 +404,11 @@ svg {
 .panel[data-tone="hero"] {
   overflow: hidden;
   display: grid;
-  grid-template-columns: minmax(0, 0.94fr) minmax(420px, 1.06fr);
-  grid-template-rows: 1fr auto;
-  min-height: 480px;
+  grid-template-columns: minmax(0, 1fr) minmax(380px, 0.64fr);
+  align-items: end;
+  gap: 40px;
+  min-height: 0;
+  padding: 58px 52px 52px;
   background:
     linear-gradient(135deg, rgba(255, 255, 255, 0.98), rgba(239, 239, 236, 0.88)),
     var(--surface);
@@ -420,8 +422,8 @@ svg {
 }
 
 .hero-copy {
-  align-self: end;
-  padding: 60px 52px 22px;
+  align-self: center;
+  padding: 0;
 }
 
 .hero-copy h1 {
@@ -446,8 +448,8 @@ svg {
   grid-template-columns: minmax(0, 1fr) auto;
   align-items: end;
   gap: 12px;
-  margin: 0 52px 52px;
-  padding: 14px;
+  margin: 0;
+  padding: 16px;
   border: 1px solid var(--border);
   border-radius: 8px;
   background: color-mix(in srgb, var(--surface) 90%, transparent);
@@ -508,179 +510,6 @@ svg {
 .hero-stats strong {
   color: var(--app-fg);
   font-size: 18px;
-}
-
-.hero-image-wrap {
-  grid-column: 2;
-  grid-row: 1 / span 2;
-  position: relative;
-  display: grid;
-  align-content: center;
-  gap: 18px;
-  min-height: 100%;
-  padding: 28px;
-  border-left: 1px solid var(--border);
-  background:
-    linear-gradient(135deg, rgba(20, 20, 20, 0.055), transparent 36%),
-    linear-gradient(180deg, rgba(255, 255, 255, 0.5), rgba(255, 255, 255, 0.06)),
-    var(--surface-muted);
-  overflow: hidden;
-}
-
-.hero-image-wrap::before {
-  content: "";
-  position: absolute;
-  inset: 0;
-  background-image:
-    linear-gradient(color-mix(in srgb, var(--primary) 7%, transparent) 1px, transparent 1px),
-    linear-gradient(90deg, color-mix(in srgb, var(--primary) 7%, transparent) 1px, transparent 1px);
-  background-size: 42px 42px;
-  mask-image: linear-gradient(120deg, transparent, #000 18%, #000 82%, transparent);
-  opacity: 0.5;
-}
-
-.workflow-visual-grid {
-  display: grid;
-  grid-template-columns: 1fr 0.9fr;
-  gap: 10px;
-  position: relative;
-  z-index: 1;
-}
-
-.workflow-card {
-  min-height: 116px;
-  display: grid;
-  align-content: center;
-  gap: 6px;
-  padding: 18px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--surface) 82%, transparent);
-  backdrop-filter: blur(12px);
-  box-shadow: 0 12px 32px rgba(20, 20, 20, 0.065);
-}
-
-.workflow-card--primary {
-  grid-row: span 2;
-  min-height: 242px;
-  background: var(--primary);
-  color: var(--surface);
-}
-
-[data-theme="dark"] .workflow-card--primary {
-  color: #090909;
-}
-
-.workflow-card span,
-.workflow-card small,
-.workflow-clinic-panel small {
-  color: var(--muted-fg);
-  font-size: 12px;
-  font-weight: 700;
-}
-
-.workflow-card--primary span,
-.workflow-card--primary small {
-  color: color-mix(in srgb, var(--surface) 70%, transparent);
-}
-
-[data-theme="dark"] .workflow-card--primary span,
-[data-theme="dark"] .workflow-card--primary small {
-  color: rgba(9, 9, 9, 0.62);
-}
-
-.workflow-card strong {
-  font-size: clamp(30px, 4vw, 58px);
-  line-height: 0.94;
-}
-
-.workflow-route {
-  display: grid;
-  grid-template-columns: repeat(3, 1fr);
-  gap: 10px;
-  position: relative;
-  z-index: 1;
-}
-
-.workflow-route span {
-  height: 6px;
-  border-radius: 999px;
-  background: color-mix(in srgb, var(--primary) 16%, transparent);
-}
-
-.workflow-route span:nth-child(2) {
-  background: color-mix(in srgb, var(--primary) 28%, transparent);
-}
-
-.workflow-route span:nth-child(3) {
-  background: color-mix(in srgb, var(--primary) 44%, transparent);
-}
-
-.workflow-clinic-panel {
-  position: relative;
-  z-index: 1;
-  display: grid;
-  gap: 0;
-  padding: 0;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(12px);
-  overflow: hidden;
-}
-
-.workflow-clinic-panel > div {
-  display: grid;
-  grid-template-columns: auto 1fr;
-  gap: 10px;
-  align-items: center;
-  padding: 13px 16px;
-  border-bottom: 1px solid var(--border);
-}
-
-.workflow-clinic-panel > div:last-child {
-  border-bottom: 0;
-}
-
-.workflow-clinic-panel > div > svg {
-  color: var(--muted-fg);
-}
-
-.workflow-clinic-panel span {
-  display: grid;
-  gap: 1px;
-}
-
-.workflow-clinic-panel strong {
-  font-size: 13px;
-}
-
-.hero-availability-card {
-  position: absolute;
-  right: 36px;
-  bottom: 36px;
-  display: none;
-  gap: 2px;
-  min-width: 124px;
-  padding: 12px;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: color-mix(in srgb, var(--surface) 88%, transparent);
-  backdrop-filter: blur(14px);
-  box-shadow: var(--shadow-soft);
-}
-
-.hero-availability-card span {
-  display: inline-flex;
-  align-items: center;
-  gap: 7px;
-  font-size: 20px;
-  font-weight: 800;
-}
-
-.hero-availability-card small {
-  color: var(--muted-fg);
-  font-size: 12px;
 }
 
 .field {
@@ -1697,24 +1526,19 @@ svg {
     grid-template-columns: 1fr;
   }
 
-  .hero-image-wrap {
-    grid-column: auto;
-    grid-row: auto;
-    order: 3;
-    min-height: 340px;
-    border-left: 0;
-    border-top: 1px solid var(--border);
-    border-bottom: 1px solid var(--border);
+  .panel[data-tone="hero"] {
+    gap: 26px;
+    padding: 38px 30px 30px;
   }
 
   .hero-copy {
     order: 1;
-    padding: 36px 30px 18px;
+    padding: 0;
   }
 
   .hero-search {
     order: 2;
-    margin: 0 30px 30px;
+    margin: 0;
   }
 
   .directory-rail {
@@ -1763,41 +1587,16 @@ svg {
     display: none;
   }
 
-  .hero-copy {
+  .panel[data-tone="hero"] {
     padding: 24px;
+  }
+
+  .hero-copy {
+    padding: 0;
   }
 
   .hero-copy h1 {
     font-size: 35px;
-  }
-
-  .hero-image-wrap {
-    min-height: 320px;
-    padding: 10px;
-  }
-
-  .workflow-visual-grid {
-    gap: 8px;
-  }
-
-  .workflow-card {
-    min-height: 92px;
-    padding: 12px;
-  }
-
-  .workflow-card--primary {
-    min-height: 192px;
-  }
-
-  .workflow-clinic-panel {
-    padding: 12px;
-  }
-
-  .hero-availability-card {
-    right: 18px;
-    bottom: 18px;
-    min-width: 104px;
-    padding: 10px;
   }
 
   .hero-search,
