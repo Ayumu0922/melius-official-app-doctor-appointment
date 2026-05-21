@@ -836,8 +836,52 @@ function HomeView({
   return (
     <main className="home-grid">
       <Panel dataId="hero-search-panel" roleName="hero" tone="hero">
-        <div data-melius-ui-id="hero-doctor-image" data-melius-ui-role="image" className="hero-image-wrap">
-          <img src={professionalDoctor} alt="Medical professional" />
+        <div data-melius-ui-id="hero-appointment-workflow" data-melius-ui-role="visual" className="hero-image-wrap">
+          <div className="workflow-visual-grid">
+            <div className="workflow-card workflow-card--primary">
+              <span>{c.hero.statToday}</span>
+              <strong>18</strong>
+              <small>New York, NY</small>
+            </div>
+            <div className="workflow-card">
+              <span>Cardiology</span>
+              <strong>4.8</strong>
+              <small>2 slots open</small>
+            </div>
+            <div className="workflow-card">
+              <span>Pediatrics</span>
+              <strong>9:30</strong>
+              <small>Same-day visit</small>
+            </div>
+          </div>
+          <div className="workflow-route">
+            <span />
+            <span />
+            <span />
+          </div>
+          <div className="workflow-clinic-panel" data-melius-ui-id="hero-clinic-workflow-card">
+            <div>
+              <Stethoscope size={18} />
+              <span>
+                <strong>Clinic intake</strong>
+                <small>Insurance, language, payment</small>
+              </span>
+            </div>
+            <div>
+              <ShieldCheck size={18} />
+              <span>
+                <strong>Verified doctors</strong>
+                <small>Licenses and availability synced</small>
+              </span>
+            </div>
+            <div>
+              <FileText size={18} />
+              <span>
+                <strong>Visit summary</strong>
+                <small>Sent after confirmation</small>
+              </span>
+            </div>
+          </div>
           <div className="hero-availability-card" data-melius-ui-id="hero-availability-card">
             <span>
               <CalendarCheck size={17} />
