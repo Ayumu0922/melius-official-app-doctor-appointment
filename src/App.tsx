@@ -50,6 +50,7 @@ type ThemePreference = 'light' | 'dark' | 'system';
 type View = 'home' | 'doctor' | 'appointments' | 'payment' | 'confirmation' | 'login';
 type DoctorCategory = 'primary' | 'specialist' | 'dentist';
 type BookingStep = 1 | 2;
+type DetailTab = 'about' | 'reviews' | 'location';
 
 interface Doctor {
   id: string;
@@ -228,6 +229,7 @@ const copy = {
       perVisit: '診療ごと',
       book: '予約する',
       noResults: '条件に合う医師が見つかりません',
+      matching: '件の候補',
     },
     detail: {
       back: '医師一覧へ',
@@ -361,6 +363,7 @@ const copy = {
       perVisit: 'per visit',
       book: 'Book Now',
       noResults: 'No doctors found',
+      matching: 'matching doctors',
     },
     detail: {
       back: 'Back to doctors',
@@ -531,11 +534,13 @@ function App() {
   const [selectedDepartments, setSelectedDepartments] = useState<string[]>([]);
   const [searchQuery, setSearchQuery] = useState('');
   const [bookingStep, setBookingStep] = useState<BookingStep>(1);
+  const [detailTab, setDetailTab] = useState<DetailTab>('about');
   const [selectedDate, setSelectedDate] = useState('May 24, 2026');
   const [selectedTime, setSelectedTime] = useState('10:00 AM');
   const [currency, setCurrency] = useState('USD');
   const [reason, setReason] = useState('Checkup');
   const [appointmentTab, setAppointmentTab] = useState<'upcoming' | 'completed' | 'cancelled'>('upcoming');
+  const [appointmentItems, setAppointmentItems] = useState<Appointment[]>(appointments);
   const [paymentMethod, setPaymentMethod] = useState<'card' | 'paypal'>('card');
   const [authTab, setAuthTab] = useState<'sign-in' | 'register'>('sign-in');
   const [services, setServices] = useState({
@@ -593,6 +598,7 @@ function App() {
   function openDoctor(doctorId: string) {
     setSelectedDoctorId(doctorId);
     setBookingStep(1);
+    setDetailTab('about');
     setView('doctor');
   }
 
@@ -607,6 +613,15 @@ function App() {
       ...previous,
       [service]: !previous[service],
     }));
+  }
+
+  function cancelAppointment(appointmentId: string) {
+    setAppointmentItems((previous) =>
+      previous.map((appointment) =>
+        appointment.id === appointmentId ? { ...appointment, status: 'cancelled' } : appointment,
+      ),
+    );
+    setAppointmentTab('cancelled');
   }
 
   return (
@@ -642,6 +657,7 @@ function App() {
             c={c}
             doctor={selectedDoctor}
             bookingStep={bookingStep}
+            detailTab={detailTab}
             selectedDate={selectedDate}
             selectedTime={selectedTime}
             currency={currency}
@@ -649,6 +665,7 @@ function App() {
             services={services}
             totalCost={convertedTotal}
             setBookingStep={setBookingStep}
+            setDetailTab={setDetailTab}
             setSelectedDate={setSelectedDate}
             setSelectedTime={setSelectedTime}
             setCurrency={setCurrency}
@@ -662,9 +679,11 @@ function App() {
         {view === 'appointments' ? (
           <AppointmentsView
             c={c}
+            appointments={appointmentItems}
             tab={appointmentTab}
             setTab={setAppointmentTab}
             openDoctor={openDoctor}
+            cancelAppointment={cancelAppointment}
             goHome={() => setView('home')}
           />
         ) : null}
@@ -804,6 +823,16 @@ function HomeView({
   clearDepartments: () => void;
   openDoctor: (doctorId: string) => void;
 }) {
+  const [filtersOpen, setFiltersOpen] = useState(true);
+  const [searchSubmitted, setSearchSubmitted] = useState(false);
+
+  function submitSearch() {
+    setSearchSubmitted(true);
+    document
+      .querySelector('[data-melius-ui-id="doctor-directory-section"]')
+      ?.scrollIntoView({ behavior: 'smooth', block: 'start' });
+  }
+
   return (
     <main className="home-grid">
       <Panel dataId="hero-search-panel" roleName="hero" tone="hero">
@@ -854,7 +883,15 @@ function HomeView({
             defaultValue="New York, NY"
             icon={<MapPin size={17} />}
           />
-          <Button dataId="hero-search-button">{c.hero.cta}</Button>
+          <Button dataId="hero-search-button" onClick={submitSearch}>
+            {c.hero.cta}
+          </Button>
+          <div className="search-response" data-active={searchSubmitted ? 'true' : 'false'}>
+            <CheckCircle2 size={15} />
+            <span>
+              {filteredDoctors.length} {c.doctors.matching}
+            </span>
+          </div>
         </div>
       </Panel>
 
@@ -867,7 +904,7 @@ function HomeView({
         </SectionTitle>
 
         <div className="directory-workspace">
-          <aside className="directory-rail" data-melius-ui-id="doctor-filter-rail">
+          <aside className="directory-rail" data-melius-ui-id="doctor-filter-rail" data-open={filtersOpen ? 'true' : 'false'}>
             <div className="directory-snapshot" data-melius-ui-id="doctor-result-snapshot">
               <span>
                 <strong>{filteredDoctors.length}</strong>
@@ -879,7 +916,13 @@ function HomeView({
               </span>
             </div>
             <div className="filter-actions" data-melius-ui-id="department-filter-actions">
-              <Button dataId="department-filter-button" variant="secondary" size="sm">
+              <Button
+                dataId="department-filter-button"
+                variant="secondary"
+                size="sm"
+                selected={filtersOpen}
+                onClick={() => setFiltersOpen((value) => !value)}
+              >
                 <Filter size={15} />
                 {c.doctors.filter}
                 {selectedDepartments.length > 0 ? <span>{selectedDepartments.length}</span> : null}
@@ -988,6 +1031,7 @@ function DoctorView({
   c,
   doctor,
   bookingStep,
+  detailTab,
   selectedDate,
   selectedTime,
   currency,
@@ -995,6 +1039,7 @@ function DoctorView({
   services,
   totalCost,
   setBookingStep,
+  setDetailTab,
   setSelectedDate,
   setSelectedTime,
   setCurrency,
@@ -1006,6 +1051,7 @@ function DoctorView({
   c: (typeof copy)[Locale];
   doctor: Doctor;
   bookingStep: BookingStep;
+  detailTab: DetailTab;
   selectedDate: string;
   selectedTime: string;
   currency: string;
@@ -1013,6 +1059,7 @@ function DoctorView({
   services: { translator: boolean; visa: boolean; flight: boolean; hotel: boolean };
   totalCost: string;
   setBookingStep: (step: BookingStep) => void;
+  setDetailTab: (tab: DetailTab) => void;
   setSelectedDate: (value: string) => void;
   setSelectedTime: (value: string) => void;
   setCurrency: (value: string) => void;
@@ -1070,45 +1117,109 @@ function DoctorView({
 
         <Panel dataId="doctor-about-panel" roleName="tabs">
           <div className="category-tabs detail-tabs">
-            <button type="button" data-melius-ui-id="doctor-tab-about" data-active="true">
+            <button
+              type="button"
+              data-melius-ui-id="doctor-tab-about"
+              data-active={detailTab === 'about' ? 'true' : 'false'}
+              onClick={() => setDetailTab('about')}
+            >
               {c.detail.about}
             </button>
-            <button type="button" data-melius-ui-id="doctor-tab-reviews">
+            <button
+              type="button"
+              data-melius-ui-id="doctor-tab-reviews"
+              data-active={detailTab === 'reviews' ? 'true' : 'false'}
+              onClick={() => setDetailTab('reviews')}
+            >
               {c.detail.reviewTab}
             </button>
-            <button type="button" data-melius-ui-id="doctor-tab-location">
+            <button
+              type="button"
+              data-melius-ui-id="doctor-tab-location"
+              data-active={detailTab === 'location' ? 'true' : 'false'}
+              onClick={() => setDetailTab('location')}
+            >
               {c.detail.locationTab}
             </button>
           </div>
-          <div className="about-grid">
-            <div>
-              <h2>
-                {c.detail.about} {doctor.name}
-              </h2>
-              <p>
-                {doctor.name} is a board-certified {doctor.specialty.toLowerCase()} with over 10 years of experience.
-                The practice focuses on preventive care, clear explanations, and practical follow-up plans.
-              </p>
-              <h3>{c.detail.education}</h3>
-              <ul>
-                <li>Medical Degree - Northstar Medical School</li>
-                <li>Residency - Metropolitan General Hospital</li>
-                <li>Board Certification - Medical Specialty Board</li>
-              </ul>
-            </div>
-            <div>
-              <h3>{c.detail.specialties}</h3>
-              <ul>
-                <li>Preventive care</li>
-                <li>Chronic disease management</li>
-                <li>International patient intake</li>
-                <li>Medication review</li>
-              </ul>
-              <div className="map-card" data-melius-ui-id="doctor-location-map">
-                <img src={mapLocation} alt="Clinic location map" />
+          {detailTab === 'about' ? (
+            <div className="about-grid">
+              <div>
+                <h2>
+                  {c.detail.about} {doctor.name}
+                </h2>
+                <p>
+                  {doctor.name} is a board-certified {doctor.specialty.toLowerCase()} with over 10 years of experience.
+                  The practice focuses on preventive care, clear explanations, and practical follow-up plans.
+                </p>
+                <h3>{c.detail.education}</h3>
+                <ul>
+                  <li>Medical Degree - Northstar Medical School</li>
+                  <li>Residency - Metropolitan General Hospital</li>
+                  <li>Board Certification - Medical Specialty Board</li>
+                </ul>
+              </div>
+              <div>
+                <h3>{c.detail.specialties}</h3>
+                <ul>
+                  <li>Preventive care</li>
+                  <li>Chronic disease management</li>
+                  <li>International patient intake</li>
+                  <li>Medication review</li>
+                </ul>
+                <div className="map-card" data-melius-ui-id="doctor-location-map">
+                  <img src={mapLocation} alt="Clinic location map" />
+                </div>
               </div>
             </div>
-          </div>
+          ) : null}
+          {detailTab === 'reviews' ? (
+            <div className="review-list" data-melius-ui-id="doctor-review-list">
+              {[
+                ['Avery Stone', 'Clear explanation and a calm appointment flow.'],
+                ['Mina Tanaka', 'The clinic prepared interpreter support before I arrived.'],
+                ['Noah Lee', 'Fast booking, practical follow-up notes, and very little waiting.'],
+              ].map(([name, text]) => (
+                <article key={name} className="review-card">
+                  <span>
+                    <strong>{name}</strong>
+                    <small>Verified visit</small>
+                  </span>
+                  <div>
+                    {Array.from({ length: 5 }).map((_, index) => (
+                      <Star key={index} size={15} fill="currentColor" />
+                    ))}
+                  </div>
+                  <p>{text}</p>
+                </article>
+              ))}
+            </div>
+          ) : null}
+          {detailTab === 'location' ? (
+            <div className="location-panel" data-melius-ui-id="doctor-location-panel">
+              <div className="map-card">
+                <img src={mapLocation} alt="Clinic location map" />
+              </div>
+              <div>
+                <h2>{doctor.location}</h2>
+                <p>Suite 420, 18 West Medical Avenue, New York, NY</p>
+                <div className="appointment-facts compact">
+                  <span>
+                    <Clock size={17} />
+                    8:00 AM - 6:00 PM
+                  </span>
+                  <span>
+                    <ShieldCheck size={17} />
+                    Insurance desk available
+                  </span>
+                  <span>
+                    <Globe2 size={17} />
+                    International patient intake
+                  </span>
+                </div>
+              </div>
+            </div>
+          ) : null}
         </Panel>
       </section>
       <aside className="booking-sidebar">
@@ -1308,15 +1419,19 @@ function BookingForm({
 
 function AppointmentsView({
   c,
+  appointments,
   tab,
   setTab,
   openDoctor,
+  cancelAppointment,
   goHome,
 }: {
   c: (typeof copy)[Locale];
+  appointments: Appointment[];
   tab: 'upcoming' | 'completed' | 'cancelled';
   setTab: (tab: 'upcoming' | 'completed' | 'cancelled') => void;
   openDoctor: (doctorId: string) => void;
+  cancelAppointment: (appointmentId: string) => void;
   goHome: () => void;
 }) {
   const visibleAppointments = appointments.filter((appointment) => appointment.status === tab);
@@ -1368,7 +1483,13 @@ function AppointmentsView({
                       <Button dataId={`appointment-view-${appointment.id}`} variant="secondary" onClick={() => openDoctor(doctor.id)}>
                         {c.appointments.view}
                       </Button>
-                      <Button dataId={`appointment-action-${appointment.id}`} variant={appointment.status === 'upcoming' ? 'danger' : 'primary'}>
+                      <Button
+                        dataId={`appointment-action-${appointment.id}`}
+                        variant={appointment.status === 'upcoming' ? 'danger' : 'primary'}
+                        onClick={() =>
+                          appointment.status === 'upcoming' ? cancelAppointment(appointment.id) : openDoctor(doctor.id)
+                        }
+                      >
                         {appointment.status === 'upcoming' ? c.appointments.cancel : c.appointments.again}
                       </Button>
                     </div>
@@ -1395,6 +1516,18 @@ function AppointmentsView({
             </Panel>
           );
         })}
+        {visibleAppointments.length === 0 ? (
+          <Panel dataId="appointment-empty-state" tone="soft">
+            <div className="empty-state">
+              <CalendarDays size={24} />
+              <strong>{c.appointments.title}</strong>
+              <span>{c.doctors.noResults}</span>
+              <Button dataId="appointment-empty-new-button" onClick={goHome}>
+                {c.appointments.new}
+              </Button>
+            </div>
+          </Panel>
+        ) : null}
       </div>
     </main>
   );
